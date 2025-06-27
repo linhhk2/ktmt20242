@@ -1,17 +1,12 @@
-// ALU.v
-// Thực hiện các phép toán số học và logic.
-
+// --- File: ALU.v ---
 `include "defines.v"
 
 module ALU(
-    input  [31:0] A,             // Toán hạng A
-    input  [31:0] B,             // Toán hạng B
-    input  [3:0]  ALUControl,    // Tín hiệu điều khiển 4-bit để chọn phép toán
-    output reg [31:0] Result,    // Kết quả phép toán
-    output        Zero           // Cờ Zero, bật lên 1 nếu kết quả bằng 0
+    input  [31:0] A,
+    input  [31:0] B,
+    input  [3:0]  ALUControl,
+    output reg [31:0] Result
 );
-
-    // Logic tổ hợp để thực hiện phép toán dựa trên ALUControl
     always @(*) begin
         case (ALUControl)
             `ALU_ADD:  Result = A + B;
@@ -24,11 +19,7 @@ module ALU(
             `ALU_SRA:  Result = $signed(A) >>> B[4:0];
             `ALU_OR:   Result = A | B;
             `ALU_AND:  Result = A & B;
-            default:   Result = 32'hdeadbeef; // Giá trị không hợp lệ, giúp gỡ lỗi
+            default:   Result = 32'hdeadbeef;
         endcase
     end
-
-    // Gán cờ Zero nếu kết quả của phép toán là 0
-    assign Zero = (Result == 32'd0);
-
 endmodule
