@@ -1,36 +1,40 @@
-// main_decoder.v
+// --- File: main_decoder.v ---
 `include "defines.v"
 
 module main_decoder(
     input  [6:0] opcode,
-    output reg   RegWEn,      // Ghi vào thanh ghi?
-    output reg   ALUSrc,      // Toán hạng B của ALU là immediate?
-    output reg   MemRW,       // Ghi vào bộ nhớ dữ liệu?
-    output reg   MemToReg,    // Dữ liệu ghi về thanh ghi lấy từ mem?
-    output reg   Branch,      // Là lệnh rẽ nhánh?
-    output reg   Jump,        // Là lệnh nhảy (JAL/JALR)?
-    output reg [1:0] ALUOp     // Loại phép toán cho ALU_decoder
+    input  [2:0] funct3,
+    output reg   RegWEn,
+    output reg   ALUSrc,
+    output reg   MemRW,
+    output reg   MemToReg,
+    output reg   Branch,
+    output reg   BrUn,
+    output reg   Jump,
+    output reg [1:0] ALUOp
 );
     always @(*) begin
-        // Giá trị mặc định
         RegWEn = 1'b0; ALUSrc = 1'b0; MemRW = 1'b0; MemToReg = 1'b0;
-        Branch = 1'b0; Jump = 1'b0; ALUOp = 2'bxx;
+        Branch = 1'b0; BrUn = 1'b0; Jump = 1'b0; ALUOp = 2'bxx;
 
         case (opcode)
             `OPCODE_R: begin
-                RegWEn = 1'b1; ALUOp = 2'b00; // R-type
+                RegWEn = 1'b1; ALUOp = 2'b00;
             end
             `OPCODE_I_ARITH: begin
-                RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b10; // I-type
+                RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b10;
             end
             `OPCODE_LOAD: begin
-                RegWEn = 1'b1; ALUSrc = 1'b1; MemToReg = 1'b1; ALUOp = 2'b01; // Load
+                RegWEn = 1'b1; ALUSrc = 1'b1; MemToReg = 1'b1; ALUOp = 2'b01;
             end
             `OPCODE_S: begin
-                ALUSrc = 1'b1; MemRW = 1'b1; ALUOp = 2'b01; // Store
+                ALUSrc = 1'b1; MemRW = 1'b1; ALUOp = 2'b01;
             end
             `OPCODE_B: begin
-                Branch = 1'b1; ALUOp = 2'b11; // Branch
+                Branch = 1'b1; ALUOp = 2'b11;
+                if (funct3 == `FUNCT3_BLTU || funct3 == `FUNCT3_BGEU) begin
+                    BrUn = 1'b1;
+                end
             end
             `OPCODE_LUI: begin
                 RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b10;
