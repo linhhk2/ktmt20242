@@ -16,26 +16,29 @@ module RISCV_Single_Cycle(
     wire [6:0]  funct7;
     wire [4:0]  rs1_addr, rs2_addr, rd_addr;
     wire        branch_taken;
-    wire        RegWEn, ALUSrc, MemRW, MemToReg, Branch, Jump, BrUn;
-    wire [3:0]  alu_control;
 
-    wire is_jalr;
-    assign is_jalr = (opcode == `OPCODE_JALR);
+    // Tín hiệu điều khiển
+    wire RegWEn, ALUSrc, MemRW, MemToReg, Branch, Jump, BrUn;
+    wire [3:0] alu_control;
 
+    // --- Datapath ---
+
+    // Logic cập nhật PC cho JAL/JALR
     assign pc_plus_4 = pc_current + 4;
-    
     assign pc_next = (Branch && branch_taken) ? (pc_current + immediate) :
-                     (Jump && is_jalr)      ? {alu_result[31:1], 1'b0} :
-                     (Jump)                 ? alu_result :
-                                              pc_plus_4;
+                     (Jump && (opcode == `OPCODE_JALR`)) ? {alu_result[31:1], 1'b0} :
+                     (Jump)                              ? alu_result :
+                                                           pc_plus_4;
 
     Program_Counter pc_reg(.clk(clk), .rst_n(rst_n), .pc_in(pc_next), .pc_out(pc_current));
     
+    // Cổng output cho Testbench
     assign PC_out_top = pc_current;
     
     IMEM IMEM_inst(.address(pc_current), .instruction(instruction));
     assign Instruction_out_top = instruction;
     
+    // Giải mã các trường lệnh
     assign opcode   = instruction[6:0];
     assign funct3   = instruction[14:12];
     assign funct7   = instruction[31:25];
@@ -43,6 +46,7 @@ module RISCV_Single_Cycle(
     assign rs2_addr = instruction[24:20];
     assign rd_addr  = instruction[11:7];
     
+    // Đơn vị điều khiển
     control_unit ctrl(
         .opcode(opcode), .funct3(funct3), .funct7(funct7),
         .RegWEn(RegWEn), .ALUSrc(ALUSrc), .MemRW(MemRW), 
@@ -51,14 +55,21 @@ module RISCV_Single_Cycle(
     );
 
     RegisterFile Reg_inst(
-        .clk(clk), .RegWEn(RegWEn), .rs1_addr(rs1_addr), 
-        .rs2_addr(rs2_addr), .rd_addr(rd_addr), .rd_data(write_back_data), 
-        .rs1_data(rs1_data), .rs2_data(rs2_data)
+        .clk(clk),
+        .rst_n(rst_n), 
+        .RegWEn(RegWEn), 
+        .rs1_addr(rs1_addr), 
+        .rs2_addr(rs2_addr), 
+        .rd_addr(rd_addr), 
+        .rd_data(write_back_data), 
+        .rs1_data(rs1_data), 
+        .rs2_data(rs2_data)
     );
     
     Imm_Gen imm_gen(.instruction(instruction), .immediate(immediate));
     Branch_Comp branch_comp(.A(rs1_data), .B(rs2_data), .BrUn(BrUn), .funct3(funct3), .BranchTaken(branch_taken));
 
+    // Logic chọn đầu vào ALU cho LUI/AUIPC/JAL
     assign alu_in_a = (opcode == `OPCODE_AUIPC || opcode == `OPCODE_JAL) ? pc_current :
                       (opcode == `OPCODE_LUI)                           ? 32'b0      : 
                                                                           rs1_data;
@@ -68,6 +79,7 @@ module RISCV_Single_Cycle(
     
     DMEM DMEM_inst(.clk(clk), .address(alu_result), .write_data(rs2_data), .MemRW(MemRW), .read_data(mem_read_data));
 
+    // Logic write-back cho JAL/JALR
     assign write_back_data = MemToReg ? mem_read_data : (Jump ? pc_plus_4 : alu_result);
     
 endmodule
