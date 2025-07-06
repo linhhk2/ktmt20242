@@ -10,12 +10,10 @@ module IMEM(
         for (i = 0; i < 1024; i = i + 1)
             memory[i] = 32'b0;
 
-        string path;
-        if (!$value$plusargs("memfile=%s", path))
-            path = "program.hex";      // tên mặc định
-        $display("[IMEM] loading %s", path);
-        $readmemh(path, memory);
+        $readmemh("program.hex", memory);
     end
 
-    always @(*) instruction = memory[address[11:2]];
+    always @(*) begin
+        instruction = memory[address[11:2]];
+    end
 endmodule
