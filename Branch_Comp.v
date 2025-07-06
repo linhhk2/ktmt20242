@@ -3,7 +3,7 @@
 module Branch_Comp(
     input [31:0] A,
     input [31:0] B,
-    input        BrUn, 
+    input        BrUn,
     input [2:0]  funct3,
     output reg   BranchTaken
 );
