@@ -29,7 +29,7 @@ module control_unit(
     );
 
     ALU_decoder ad(
-        .funct7(funct7), 
+        .funct7(funct7),
         .funct3(funct3),
         .ALUOp(alu_op),
         .alu_control(alu_control)
