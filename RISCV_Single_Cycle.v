@@ -4,7 +4,7 @@
 module RISCV_Single_Cycle(
     input clk,
     input rst_n,
-    output wire [31:0] Instruction_out_top
+    output wire [31:0] Instruction_out_top,
     output wire [31:0] PC_out_top
 );
     wire [31:0] pc_current, pc_next, pc_plus_4;
