@@ -19,10 +19,12 @@ module RISCV_Single_Cycle(
     wire        RegWEn, ALUSrc, MemRW, MemToReg, Branch, Jump, BrUn;
     wire [3:0]  alu_control;
 
-    wire is_jalr = (opcode == `OPCODE_JALR`);
+    wire is_jalr;
+    assign is_jalr = (opcode == `OPCODE_JALR);
 
     assign pc_plus_4 = pc_current + 4;
     
+    // Logic PC đã được sửa để phân biệt JAL và JALR
     assign pc_next = (Branch && branch_taken) ? (pc_current + immediate) :
                      (Jump && is_jalr)      ? {alu_result[31:1], 1'b0} :
                      (Jump)                 ? alu_result :
@@ -63,7 +65,7 @@ module RISCV_Single_Cycle(
                                                                           rs1_data;
     assign alu_in_b = ALUSrc ? immediate : rs2_data;
     
-    ALU alu(.A(alu_in_a), .B(alu_in_b), .ALUControl(alu_control), .Result(alu_result));
+    ALU alu(.A(alu_in_a), .B(alu_in_b), .ALUControl(aluc_control), .Result(alu_result));
     
     DMEM DMEM_inst(.clk(clk), .address(alu_result), .write_data(rs2_data), .MemRW(MemRW), .read_data(mem_read_data));
 
