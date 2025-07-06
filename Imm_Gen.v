@@ -10,7 +10,7 @@ module Imm_Gen(
     always @(*) begin
         case (opcode)
             `OPCODE_I_ARITH, `OPCODE_LOAD, `OPCODE_JALR:
-                immediate = {{20{instruction[31]}}, instruction[31:20]};
+                immediate = {{21{instruction[31]}}, instruction[30:20]};
             `OPCODE_S:
                 immediate = {{20{instruction[31]}}, instruction[31:25], instruction[11:7]};
             `OPCODE_B:
