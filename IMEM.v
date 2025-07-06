@@ -5,11 +5,17 @@ module IMEM(
 );
     reg [31:0] memory [0:1023];
 
+    integer i;
     initial begin
-        $readmemh("program.hex", memory);
+        for (i = 0; i < 1024; i = i + 1)
+            memory[i] = 32'b0;
+
+        string path;
+        if (!$value$plusargs("memfile=%s", path))
+            path = "program.hex";      // tên mặc định
+        $display("[IMEM] loading %s", path);
+        $readmemh(path, memory);
     end
 
-    always @(*) begin
-        instruction = memory[address[11:2]];
-    end
+    always @(*) instruction = memory[address[11:2]];
 endmodule
