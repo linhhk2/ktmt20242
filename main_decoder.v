@@ -43,7 +43,7 @@ module main_decoder(
                 RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b01;
             end
             `OPCODE_JAL: begin
-                RegWEn = 1'b1; Jump = 1'b1; ALUOp = 2'b01;
+                RegWEn = 1'b1; ALUSrc = 1'b1; Jump = 1'b1; ALUOp = 2'b01;
             end
             `OPCODE_JALR: begin
                 RegWEn = 1'b1; Jump = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b01;
