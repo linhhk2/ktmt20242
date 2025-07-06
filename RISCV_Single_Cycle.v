@@ -20,7 +20,7 @@ module RISCV_Single_Cycle(
     wire [3:0]  alu_control;
 
     wire is_jalr;
-    assign is_jalr = (opcode == `OPCODE_JALR`);
+    assign is_jalr = (opcode == `OPCODE_JALR);
 
     assign pc_plus_4 = pc_current + 4;
     
