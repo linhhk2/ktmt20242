@@ -54,7 +54,9 @@ module RISCV_Single_Cycle(
     Imm_Gen imm_gen(.instruction(instruction), .immediate(immediate));
     Branch_Comp branch_comp(.A(rs1_data), .B(rs2_data), .BrUn(BrUn), .funct3(funct3), .BranchTaken(branch_taken));
 
-    assign alu_in_a = (opcode == `OPCODE_AUIPC || opcode == `OPCODE_JAL) ? pc_current : rs1_data;
+    assign alu_in_a = (opcode == `OPCODE_AUIPC || opcode == `OPCODE_JAL) ? pc_current :
+                      (opcode == `OPCODE_LUI)                           ? 32'b0      : 
+                                                                          rs1_data;
     assign alu_in_b = ALUSrc ? immediate : rs2_data;
     
     ALU alu(.A(alu_in_a), .B(alu_in_b), .ALUControl(alu_control), .Result(alu_result));
