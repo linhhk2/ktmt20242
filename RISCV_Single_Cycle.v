@@ -25,8 +25,8 @@ module RISCV_Single_Cycle(
     // Next PC Logic
     assign pc_plus_4 = pc_current + 4;
     assign pc_next = (Branch && branch_taken) ? (pc_current + immediate) :
-                     (Jump) ? alu_result :
-                              pc_plus_4;
+                 (Jump) ? {alu_result[31:1], 1'b0} :
+                          pc_plus_4;
 
     // Program Counter
     Program_Counter pc_reg(
