@@ -5,14 +5,14 @@ module RegisterFile(
     input      [31:0]  rd_data,
     output reg [31:0]  rs1_data, rs2_data
 );
-    reg [31:0] regs [0:31];
+    reg [31:0] registers [0:31];
 
     always @(*) begin
-        rs1_data = (rs1_addr == 5'd0) ? 32'b0 : regs[rs1_addr];
-        rs2_data = (rs2_addr == 5'd0) ? 32'b0 : regs[rs2_addr];
+        rs1_data = (rs1_addr == 5'd0) ? 32'b0 : registers[rs1_addr];
+        rs2_data = (rs2_addr == 5'd0) ? 32'b0 : registers[rs2_addr];
     end
 
     always @(posedge clk)
         if (RegWEn && rd_addr != 5'd0)
-            regs[rd_addr] <= rd_data;
+            registers[rd_addr] <= rd_data;
 endmodule
