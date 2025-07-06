@@ -7,6 +7,7 @@ module ALU_decoder(
     output reg [3:0] alu_control
 );
 
+    // Dây nội bộ để trích xuất bit quan trọng
     wire funct7b5 = funct7[5];
 
     always @(*) begin
@@ -23,7 +24,7 @@ module ALU_decoder(
                     `FUNCT3_AND:     alu_control = `ALU_AND;
                     default:         alu_control = 4'hX;
                 endcase
-            2'b01: // Cho loads, stores, LUI, AUIPC, JAL, JALR
+            2'b01: 
                 alu_control = `ALU_ADD;
             2'b10: // I-Type
                 case(funct3)
@@ -34,7 +35,7 @@ module ALU_decoder(
                     `FUNCT3_ORI:     alu_control = `ALU_OR;
                     `FUNCT3_ANDI:    alu_control = `ALU_AND;
                     `FUNCT3_SLLI:    alu_control = `ALU_SLL;
-                    `FUNCT3_SRLI_SRAI: alu_control = (funct7b5) ? `ALU_SRA : `ALU_SRL;
+                    `FUNCT3_SRLI_SRAI: alu_control = (funct7[5]) ? `ALU_SRA : `ALU_SRL; 
                     default:         alu_control = 4'hX;
                 endcase
             2'b11: // Cho branches
