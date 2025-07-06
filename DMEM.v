@@ -7,18 +7,18 @@ module DMEM(
     output reg [31:0] read_data
 );
     reg [31:0] memory [0:1023];
-    integer i;                       
-    initial                          
+
+    // zero‑init bộ nhớ dữ liệu
+    integer i;
+    initial begin
         for (i = 0; i < 1024; i = i + 1)
-           memory[i] = 32'b0;
-
-    always @(*) begin
-        read_data = memory[address[11:2]];
+            memory[i] = 32'b0;
     end
 
-    always @(posedge clk) begin
-        if (MemRW) begin
-            memory[address[11:2]] <= write_data;
-        end
-    end
+    // đọc bất đồng bộ
+    always @(*) read_data = memory[address[11:2]];
+
+    // ghi đồng bộ
+    always @(posedge clk)
+        if (MemRW) memory[address[11:2]] <= write_data;
 endmodule
