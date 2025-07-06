@@ -5,6 +5,7 @@ module RISCV_Single_Cycle(
     input clk,
     input rst_n,
     output wire [31:0] Instruction_out_top
+    output wire [31:0] PC_out_top
 );
     wire [31:0] pc_current, pc_next, pc_plus_4;
     wire [31:0] instruction, immediate;
@@ -23,6 +24,8 @@ module RISCV_Single_Cycle(
                               pc_plus_4;
     
     Program_Counter pc_reg(clk, rst_n, pc_next, pc_current);
+
+    assign PC_out_top = pc_current;
     
     IMEM IMEM_inst(pc_current, instruction);
     
@@ -37,7 +40,7 @@ module RISCV_Single_Cycle(
     
     control_unit ctrl(opcode, funct3, funct7, RegWEn, ALUSrc, MemRW, MemToReg, Branch, BrUn, Jump, alu_control);
     
-    RegisterFile reg_file(clk, RegWEn, rs1_addr, rs2_addr, rd_addr, write_back_data, rs1_data, rs2_data);
+    RegisterFile Reg_inst(clk, RegWEn, rs1_addr, rs2_addr, rd_addr, write_back_data, rs1_data, rs2_data);
     
     Imm_Gen imm_gen(instruction, immediate);
     
