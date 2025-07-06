@@ -16,7 +16,7 @@ module main_decoder(
     always @(*) begin
         // Giá trị mặc định
         RegWEn = 1'b0; ALUSrc = 1'b0; MemRW = 1'b0; MemToReg = 1'b0;
-        Branch = 1'b0; BrUn = 1'b0; Jump = 1'b0; ALUOp = 2'bxx;
+        Branch = 1'b0; BrUn = 1'b0; Jump = 1'b0; ALUOp = 2'b01;
 
         case (opcode)
             `OPCODE_R: begin
