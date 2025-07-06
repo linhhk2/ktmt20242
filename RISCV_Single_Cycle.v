@@ -21,7 +21,7 @@ module RISCV_Single_Cycle(
 
     assign pc_plus_4 = pc_current + 4;
     assign pc_next = (Branch && branch_taken) ? (pc_current + immediate) :
-                     (Jump)                 ? {alu_result[31:1], 1'b0} :
+                     (Jump)                 ? alu_result :
                                               pc_plus_4;
 
     Program_Counter pc_reg(.clk(clk), .rst_n(rst_n), .pc_in(pc_next), .pc_out(pc_current));
