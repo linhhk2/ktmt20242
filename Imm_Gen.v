@@ -20,7 +20,7 @@ module Imm_Gen(
             `OPCODE_JAL:
                 immediate = {{11{instruction[31]}}, instruction[31], instruction[19:12], instruction[20], instruction[30:21], 1'b0};
             default:
-                immediate = 32'hdeadbeef;
+                immediate = 32'b0;
         endcase
     end
 endmodule
