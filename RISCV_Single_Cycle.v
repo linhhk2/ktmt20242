@@ -16,11 +16,15 @@ module RISCV_Single_Cycle(
     wire [6:0]  funct7;
     wire [4:0]  rs1_addr, rs2_addr, rd_addr;
     wire        branch_taken;
-    wire RegWEn, ALUSrc, MemRW, MemToReg, Branch, Jump, BrUn;
-    wire [3:0] alu_control;
+    wire        RegWEn, ALUSrc, MemRW, MemToReg, Branch, Jump, BrUn;
+    wire [3:0]  alu_control;
+
+    wire is_jalr = (opcode == `OPCODE_JALR`);
 
     assign pc_plus_4 = pc_current + 4;
+    
     assign pc_next = (Branch && branch_taken) ? (pc_current + immediate) :
+                     (Jump && is_jalr)      ? {alu_result[31:1], 1'b0} :
                      (Jump)                 ? alu_result :
                                               pc_plus_4;
 
