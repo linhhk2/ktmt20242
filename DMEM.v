@@ -7,6 +7,10 @@ module DMEM(
     output reg [31:0] read_data
 );
     reg [31:0] memory [0:1023];
+    integer i;                       
+    initial                          
+        for (i = 0; i < 1024; i = i + 1)
+           memory[i] = 32'b0;
 
     always @(*) begin
         read_data = memory[address[11:2]];
