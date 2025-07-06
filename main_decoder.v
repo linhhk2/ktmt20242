@@ -37,7 +37,7 @@ module main_decoder(
                 end
             end
             `OPCODE_LUI: begin
-                RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b10;
+                RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b01;
             end
             `OPCODE_AUIPC: begin
                 RegWEn = 1'b1; ALUSrc = 1'b1; ALUOp = 2'b01;
