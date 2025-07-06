@@ -11,8 +11,7 @@ module ALU_decoder(
 
     always @(*) begin
         case(ALUOp)
-            // ALUOp '00' dành riêng cho các lệnh R-type
-            2'b00:
+            2'b00: // R-Type
                 case(funct3)
                     `FUNCT3_ADD_SUB: alu_control = (funct7b5) ? `ALU_SUB : `ALU_ADD;
                     `FUNCT3_SLL:     alu_control = `ALU_SLL;
@@ -24,14 +23,9 @@ module ALU_decoder(
                     `FUNCT3_AND:     alu_control = `ALU_AND;
                     default:         alu_control = 4'hX;
                 endcase
-
-            // ALUOp '01' CHỈ CÓ NGHĨA LÀ PHÉP CỘNG
-            // Dùng cho LOAD, STORE, LUI, AUIPC, JAL, JALR
-            2'b01:
+            2'b01: // Cho LOAD, STORE, LUI, AUIPC, JAL, JALR
                 alu_control = `ALU_ADD;
-
-            // ALUOp '10' dành riêng cho các lệnh I-type số học
-            2'b10:
+            2'b10: // I-Type số học
                 case(funct3)
                     `FUNCT3_ADDI:    alu_control = `ALU_ADD;
                     `FUNCT3_SLTI:    alu_control = `ALU_SLT;
@@ -43,12 +37,8 @@ module ALU_decoder(
                     `FUNCT3_SRLI_SRAI: alu_control = (funct7b5) ? `ALU_SRA : `ALU_SRL;
                     default:         alu_control = 4'hX;
                 endcase
-
-            // ALUOp '11' CHỈ CÓ NGHĨA LÀ PHÉP TRỪ
-            // Dùng riêng cho BRANCH để so sánh
-            2'b11:
+            2'b11: // Cho Branch
                 alu_control = `ALU_SUB;
-                
             default: alu_control = 4'hX;
         endcase
     end
