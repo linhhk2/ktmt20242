@@ -44,9 +44,7 @@ module main_decoder(
             end
             `OPCODE_LUI: begin
                 RegWEn = 1'b1; ALUSrc = 1'b1;
-                // SỬA LỖI: ALUOp cần là '01' để ALU_decoder
-                // luôn thực hiện phép ADD, giúp tính toán LUI đúng.
-                ALUOp = 2'b01;
+                ALUOp = 2'b01; 
             end
             `OPCODE_AUIPC: begin
                 RegWEn = 1'b1; ALUSrc = 1'b1;
@@ -54,9 +52,7 @@ module main_decoder(
             end
             `OPCODE_JAL: begin
                 RegWEn = 1'b1; Jump = 1'b1;
-                // SỬA LỖI: Phải bật ALUSrc để ALU nhận giá trị immediate
-                // thay vì dữ liệu từ thanh ghi rs2.
-                ALUSrc = 1'b1;
+                ALUSrc = 1'b1; 
                 ALUOp = 2'b01;
             end
             `OPCODE_JALR: begin
