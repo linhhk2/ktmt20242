@@ -19,7 +19,7 @@ module ALU(
             `ALU_SRA:  Result = $signed(A) >>> B[4:0];
             `ALU_OR:   Result = A | B;
             `ALU_AND:  Result = A & B;
-            default:   Result = 32'hdeadbeef;
+            default:   Result = 32'b0;
         endcase
     end
 endmodule
