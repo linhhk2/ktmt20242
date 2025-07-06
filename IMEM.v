@@ -5,11 +5,7 @@ module IMEM(
 );
     reg [31:0] memory [0:1023];
 
-    integer i;
     initial begin
-        for (i = 0; i < 1024; i = i + 1)
-            memory[i] = 32'b0;
-
         $readmemh("program.hex", memory);
     end
 
